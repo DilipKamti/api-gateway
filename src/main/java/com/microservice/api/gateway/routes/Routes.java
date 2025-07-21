@@ -18,7 +18,7 @@ public class Routes {
 
                 // Product Service - routed via Eureka using load balancer
                 .route("product-service", r -> r
-                        .path("/api/v1/product/**")
+                        .path("/api/v1/products/**")
                         .uri("lb://PRODUCT-SERVICE"))
 
                 // Order Service
