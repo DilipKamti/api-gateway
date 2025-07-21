@@ -9,7 +9,7 @@ pipeline {
 
     parameters {
         string(name: 'VERSION', defaultValue: '1.0.0', description: 'Version of the API Gateway')
-        boolean(name: 'DELETE_OLD_BUILDS', defaultValue: false, description: 'Delete old builds before deploying')
+        booleanParam(name: 'DELETE_OLD_BUILDS', defaultValue: false, description: 'Delete old builds before deploying')
     }
 
     stages {
