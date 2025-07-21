@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/DilipKamti/api_gateway.git'
+                git 'https://github.com/DilipKamti/api-gateway.git'
             }
         }
 
