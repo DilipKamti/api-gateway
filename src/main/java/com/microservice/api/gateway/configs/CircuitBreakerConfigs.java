@@ -12,36 +12,42 @@ import org.springframework.web.reactive.function.client.WebClientRequestExceptio
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Configuration
 public class CircuitBreakerConfigs {
 
     @Bean
     public Customizer<Resilience4JCircuitBreakerFactory> defaultCustomizer() {
         return factory -> {
-            // Common configuration reused for all breakers
+            log.info("Configuring default circuit breaker settings");
+
             CircuitBreakerConfig config = CircuitBreakerConfig.custom()
-                    .slidingWindowSize(10)
-                    .slidingWindowType(CircuitBreakerConfig.SlidingWindowType.COUNT_BASED)
-                    .failureRateThreshold(50)
-                    .waitDurationInOpenState(Duration.ofSeconds(5))
-                    .permittedNumberOfCallsInHalfOpenState(1)
-                    .minimumNumberOfCalls(5)
-                    .automaticTransitionFromOpenToHalfOpenEnabled(true)
-                    .recordExceptions(
-        IOException.class,
-                        TimeoutException.class,
-                        RuntimeException.class,
-                        Exception.class,
-                        WebClientRequestException.class,
-                        WebClientResponseException.class
-                    )
-                    .ignoreExceptions(IllegalArgumentException.class)
-                    .build();
+                .slidingWindowSize(10)
+                .slidingWindowType(CircuitBreakerConfig.SlidingWindowType.COUNT_BASED)
+                .failureRateThreshold(50)
+                .waitDurationInOpenState(Duration.ofSeconds(5))
+                .permittedNumberOfCallsInHalfOpenState(1)
+                .minimumNumberOfCalls(5)
+                .automaticTransitionFromOpenToHalfOpenEnabled(true)
+                .recordExceptions(
+                    IOException.class,
+                    TimeoutException.class,
+                    RuntimeException.class,
+                    Exception.class,
+                    WebClientRequestException.class,
+                    WebClientResponseException.class
+                )
+                .ignoreExceptions(IllegalArgumentException.class)
+                .build();
 
             factory.configure(builder -> builder.circuitBreakerConfig(config), "productCircuitBreaker");
             factory.configure(builder -> builder.circuitBreakerConfig(config), "orderCircuitBreaker");
             factory.configure(builder -> builder.circuitBreakerConfig(config), "inventoryCircuitBreaker");
+            factory.configure(builder -> builder.circuitBreakerConfig(config), "userCircuitBreaker");
+
+            log.info("Circuit breakers configured: product, order, inventory, user");
         };
     }
 }
